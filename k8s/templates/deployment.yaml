@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: GITHUB_URL
+              value: "{{ .Values.githubUrl }}"
+            - name: ENV_FILE
+              value: "{{ .Values.envFile }}"
+            - name: INSTALL_CMD
+              value: "{{ .Values.installCmd }}"
+            - name: BUILD_CMD
+              value: "{{ .Values.buildCmd }}"
+            - name: RUN_CMD
+              value: "{{ .Values.runCmd }}"
+            - name: PROJECT_PATH
+              value: "{{ .Values.projectPath }}"
+            - name: AVAILABLE_PORT
+              value: "{{ .Values.service.port }}"
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          volumeMounts:
+            - name: app-volume
+              mountPath: /usr/src/app
+      volumes:
+        - name: app-volume
+          emptyDir: {}
