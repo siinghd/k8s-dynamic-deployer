@@ -1,1 +1,16 @@
-   
+replicaCount: 1
+
+image:
+  repository: ohsiingh/builderScript
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: true
+  annotations: {}
+  hosts: []
+  tls: []
